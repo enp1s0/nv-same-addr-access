@@ -1,11 +1,11 @@
 #include <iostream>
 #include <chrono>
 
-using test_t = float;
+using test_t = uint64_t;
 constexpr std::size_t N = 5000;
-constexpr std::size_t num_threads = 80;
 constexpr std::size_t block_size = 1 << 7;
-constexpr std::size_t test_count = 1 << 18;
+constexpr std::size_t num_threads = 240 * block_size;
+constexpr std::size_t test_count = 1 << 16;
 
 __constant__ test_t const_mem[N];
 
@@ -108,7 +108,7 @@ double get_elapsed_time(Func func){
 
 
 int main(){
-	auto get_speed = [](double dt){return (N * test_count * sizeof(test_t) / dt / (1lu<<30));};
+	auto get_speed = [](double dt){return (num_threads * N * test_count * sizeof(test_t) / dt / (1lu<<30));};
 
 	{
 		test_t *d_result;
